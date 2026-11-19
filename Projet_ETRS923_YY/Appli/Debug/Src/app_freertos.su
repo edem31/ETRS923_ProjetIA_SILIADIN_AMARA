@@ -1,0 +1,12 @@
+../Src/app_freertos.c:120:6:MX_FREERTOS_Init	8	static
+../Src/app_freertos.c:170:6:StartDefaultTask	16	static
+../Src/app_freertos.c:205:6:StartTaskSensors	72	static
+../Src/app_freertos.c:270:6:StartTaskIA	48	static
+../Src/app_freertos.c:321:6:StartTaskComm	72	static
+../Src/app_freertos.c:443:16:platform_read	48	static
+../Src/app_freertos.c:450:16:platform_write	48	static
+../Src/app_freertos.c:457:9:stts22h_Init	32	static
+../Src/app_freertos.c:478:7:stts22h_GetTemperature	40	static
+../Src/app_freertos.c:513:9:lps22df_Init	32	static
+../Src/app_freertos.c:534:7:lps22df_GetPressure	64	static
+../Src/app_freertos.c:584:14:comm_sanitize	24	static

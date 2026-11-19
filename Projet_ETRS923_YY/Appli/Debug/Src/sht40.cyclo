@@ -1,0 +1,4 @@
+../Src/sht40.c:18:16:sht40_crc8	4
+../Src/sht40.c:31:12:sht40_command_read6	5
+../Src/sht40.c:46:9:sht40_Init	3
+../Src/sht40.c:66:7:sht40_GetHumidity	6

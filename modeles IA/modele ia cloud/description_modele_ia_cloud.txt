@@ -1,0 +1,86 @@
+================================================================================
+DOCUMENTATION TECHNIQUE DU MODÈLE IA CLOUD - PRÉVISION MÉTÉO
+================================================================================
+
+Ce document détaille l'architecture, la justification des hyperparamètres, et la configuration
+des entrées/sorties du modèle d'intelligence artificielle optimisé pour la prévision météo locale.
+
+--------------------------------------------------------------------------------
+1. RÉCAPITULATIF DES ENTRÉES ET SORTIES (12 Entrées -> 6 Sorties)
+--------------------------------------------------------------------------------
+
+Le modèle utilise un total de 12 caractéristiques physiques et calculées (entrées) 
+pour prédire l'une des 6 classes de conditions météo cibles (sorties).
+
+A. Les 12 Entrées du Modèle :
+   1.  [temp]                 - Température ambiante (°C)
+   2.  [rhum]                 - Humidité relative (%)
+   3.  [pres]                 - Pression atmosphérique locale (hPa)
+   4.  [prob_pluie]           - Probabilité de pluie estimée (0.0 à 1.0) selon l'humidité
+   5.  [cloud_cover]          - Couverture nuageuse estimée (%)
+   6.  [wspd]                 - Vitesse du vent (km/h)
+   7.  [wpgt]                 - Vitesse des rafales de vent (km/h)
+   8.  [dwpt]                 - Point de rosée calculé (°C)
+   9.  [shortwave_radiation]  - Rayonnement solaire estimé (W/m²)
+   10. [is_day]               - Indicateur Jour / Nuit (1 = Jour, 0 = Nuit)
+   11. [delta_p]              - Tendance de pression (variation horaire en hPa)
+   12. [month]                - Index du mois en cours (1 à 12, pour capter la saisonnalité)
+
+B. Les 6 Classes de Sortie :
+   - Classe 0 : Ensoleillé / Ciel dégagé
+   - Classe 1 : Partiellement nuageux / Éclaircies
+   - Classe 2 : Couvert / Gris
+   - Classe 3 : Brume / Brouillard
+   - Classe 4 : Pluie faible / Bruine
+   - Classe 5 : Averse / Pluie soutenue
+
+--------------------------------------------------------------------------------
+2. ARCHITECTURE DU RÉSEAU DE NEURONES (Multi-Layer Perceptron)
+--------------------------------------------------------------------------------
+
+Le réseau est structuré en couches denses successives (totalement connectées) :
+
+- Couche d'Entrée : 12 dimensions.
+- Couche Cachée 1 : 128 neurones + Activation ReLU + Dropout (20%)
+- Couche Cachée 2 : 64 neurones + Activation ReLU + Dropout (20%)
+- Couche Cachée 3 : 32 neurones + Activation ReLU
+- Couche de Sortie : 6 neurones + Activation Softmax
+
+--------------------------------------------------------------------------------
+3. JUSTIFICATIONS ET CHOIX TECHNIQUES (Pourquoi ces paramètres ?)
+--------------------------------------------------------------------------------
+
+A. Pourquoi un MLP (Multi-Layer Perceptron) plutôt qu'un CNN ?
+   - Les données météo horaires sont des données tabulaires d'ingénierie de caractéristiques
+     sans relation de voisinage spatial (contrairement aux images). Un réseau dense (MLP) est 
+     donc la structure native la plus performante et légère pour ce type de tâche.
+
+B. Pourquoi la fonction d'activation 'ReLU' pour les couches cachées ?
+   - La fonction ReLU (Rectified Linear Unit, f(x) = max(0, x)) est le standard industriel.
+     Elle résout efficacement le problème de disparition du gradient (vanishing gradient),
+     permet un apprentissage beaucoup plus rapide et introduit la non-linéarité nécessaire
+     sans complexité de calcul majeure, facilitant l'intégration future sur microcontrôleur.
+
+C. Pourquoi la fonction d'activation 'Softmax' en sortie ?
+   - Notre problème est une classification multi-classe exclusive (une seule météo possible à la fois).
+     La fonction Softmax écrase les sorties brutes du réseau (logits) pour qu'elles somment à 1.0 (100%).
+     Cela permet d'interpréter directement la sortie comme une distribution de probabilité pour chaque classe.
+
+D. Rôle du 'Dropout' (0.2) :
+   - Le Dropout désactive aléatoirement 20% des neurones des couches cachées lors de chaque étape
+     d'entraînement. Cela force le réseau à apprendre des représentations redondantes robustes
+     et empêche la co-adaptation excessive, ce qui réduit drastiquement le surapprentissage (overfitting).
+
+E. Gestion du déséquilibre des classes (Class Weights) :
+   - Certaines classes comme 'Averse' ou 'Brouillard' sont statistiquement très rares.
+     L'utilisation de 'class_weight' pénalise plus lourdement les erreurs sur les classes minoritaires,
+     permettant au modèle de bien apprendre ces phénomènes cruciaux plutôt que de simplement prédire
+     toujours la météo la plus fréquente.
+
+F. Stratégie d'Entraînement Dynamique (EarlyStopping & ReduceLROnPlateau) :
+   - 'EarlyStopping' : Arrête l'entraînement si la perte de validation cesse de s'améliorer pendant 8 époques,
+     en restaurant les meilleurs poids absolus trouvés.
+   - 'ReduceLROnPlateau' : Divise le taux d'apprentissage par 2 lorsque le modèle commence à stagner, 
+     permettant d'ajuster finement les poids dans les creux de la fonction de coût.
+
+================================================================================

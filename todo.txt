@@ -1,0 +1,2 @@
+renommer et clean fichier google colab
+supprimer indications

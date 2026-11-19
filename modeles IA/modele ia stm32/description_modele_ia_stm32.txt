@@ -1,0 +1,65 @@
+================================================================================
+DOCUMENTATION TECHNIQUE DU MODÈLE IA EMBARQUÉ (STM32) - PLUIE / SEC
+================================================================================
+
+Ce document détaille l'architecture, la configuration d'entraînement ainsi que les
+justifications d'ingénierie du modèle d'IA ultra-léger conçu pour microcontrôleur.
+
+--------------------------------------------------------------------------------
+1. CONFIGURATION DES ENTRÉES ET SORTIES (3 Entrées -> 1 Sortie)
+--------------------------------------------------------------------------------
+
+A. Les 3 Entrées Physiques (mesurées par les capteurs de la carte) :
+   1. [temp]  - Température ambiante (°C)
+   2. [rhum]  - Humidité relative (%)
+   3. [pres]  - Pression atmosphérique locale (hPa)
+
+B. La Sortie :
+   - Probabilité continue de pluie (0.0 à 1.0) via une fonction Sigmoïde.
+   - Traduction binaire par seuil décisionnel optimal (ex: Seuil = 0.649) :
+        * Sortie < Seuil : Classe 0 (Temps Sec / Pas de pluie)
+        * Sortie >= Seuil : Classe 1 (Pluie)
+
+--------------------------------------------------------------------------------
+2. ARCHITECTURE DU RÉSEAU DE NEURONES EMBARQUÉ (Multi-Layer Perceptron)
+--------------------------------------------------------------------------------
+
+Le réseau est volontairement minimaliste pour s'adapter aux contraintes drastiques
+de mémoire vive (SRAM) et de stockage (Flash) du microcontrôleur STM32 :
+
+- Couche d'Entrée : 3 dimensions.
+- Couche Cachée 1 : 12 neurones + Activation ReLU
+- Couche Cachée 2 : 6 neurones + Activation ReLU
+- Couche de Sortie : 1 neurone + Activation Sigmoïde
+
+Total de ressources requises :
+- 19 Neurones
+- 133 Synapses (paramètres flottants de 32 bits, soit moins de 1 Ko de stockage !)
+
+--------------------------------------------------------------------------------
+3. JUSTIFICATIONS SCIENTIFIQUES ET CHOIX STRATÉGIQUES
+--------------------------------------------------------------------------------
+
+A. Pourquoi l'Accuracy de Validation est-elle inférieure à celle du Training ?
+   - Séparation chronologique stricte (70% passé / 15% présent / 15% futur) :
+     Au lieu de diviser les échantillons au hasard à travers toutes les époques (ce qui
+     crée des biais de proximité artificielle), nous évaluons le modèle sur des données
+     continues du futur qu'il n'a jamais rencontrées. Cet écart de précision montre la
+     véritable performance du système en situation de déploiement réel.
+
+B. Pourquoi l'utilisation de 'Class Weights' (Poids de Classe) ?
+   - Déséquilibre du jeu de données : Le climat local présente ~83% de temps sec
+     contre seulement ~17% de temps pluvieux. Sans ajustement, le réseau optimiserait
+     une fausse précision globale élevée (~83%) en prédisant bêtement et constamment
+     la classe majoritaire "Sec".
+   - Rôle stratégique : En attribuant un poids multiplicateur aux erreurs sur la classe
+     minoritaire (Pluie), le modèle sacrifie une partie de son accuracy brute théorique
+     au profit d'un meilleur équilibre F1-score, le rendant capable d'identifier
+     véritablement les signatures atmosphériques de pluie.
+
+C. Fonction d'activation 'ReLU' et 'Sigmoïde' :
+   - ReLU (couches cachées) permet d'éliminer la complexité exponentielle de calcul,
+     accélérant l'exécution en temps réel sur l'architecture ARM Cortex-M.
+   - Sigmoïde (sortie) convertit la sortie linéaire finale en une probabilité physique
+     comprise entre 0% et 100%, indispensable pour appliquer des seuils personnalisés.
+================================================================================

@@ -1,0 +1,15 @@
+../../Drivers/STM32N6xx_HAL_Driver/Inc/stm32n6xx_ll_bus.h:1165:22:LL_AHB3_GRP1_EnableClock	1
+../../Drivers/STM32N6xx_HAL_Driver/Inc/stm32n6xx_ll_bus.h:1407:22:LL_AHB4_GRP1_EnableClock	1
+../../Drivers/STM32N6xx_HAL_Driver/Inc/stm32n6xx_ll_bus.h:2273:22:LL_APB1_GRP1_EnableClock	1
+../../Drivers/STM32N6xx_HAL_Driver/Inc/stm32n6xx_ll_bus.h:2909:22:LL_APB2_GRP1_EnableClock	1
+../Src/main.c:60:5:_write	1
+../Src/main.c:67:6:I2C_San	4
+../Src/main.c:85:5:main	1
+../Src/main.c:143:15:SystemIsolation_Config	1
+../Src/main.c:192:13:MX_GPIO_Init	1
+../Src/main.c:251:6:MX_USART1_UART_Init	2
+../Src/main.c:272:6:MX_I2C_Init	4
+../Src/main.c:306:6:HAL_UART_MspInit	2
+../Src/main.c:325:6:HAL_I2C_MspInit	3
+../Src/main.c:375:6:HAL_TIM_PeriodElapsedCallback	2
+../Src/main.c:394:6:Error_Handler	1

@@ -1,0 +1,6 @@
+../../Drivers/STM32N6xx_HAL_Driver/Inc/stm32n6xx_ll_bus.h:1165:22:LL_AHB3_GRP1_EnableClock	24	static
+../LWIP/App/net_app.c:22:13:net_rif_config	16	static
+../LWIP/App/net_app.c:35:13:net_netif_config	40	static
+../LWIP/App/net_app.c:61:6:net_init	8	static
+../LWIP/App/net_app.c:70:6:net_poll	8	static
+../LWIP/App/net_app.c:87:15:net_get_netif	4	static
