@@ -1,3 +1,0 @@
-renommer et clean fichier google colab
-supprimer indications
-MAJ arborescence read me
