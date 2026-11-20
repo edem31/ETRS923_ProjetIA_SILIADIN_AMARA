@@ -347,7 +347,7 @@ ETRS923_ProjetIA_SILIADIN_AMARA/
 └── README.md                          ← ce fichier
 
 ```
-
+<!--
 ---
 
 # 🚀 9. Résultat attendu
@@ -360,10 +360,10 @@ Le système final doit permettre :
 - L'enrichissement des données avec des informations météorologiques complémentaires.
 - La classification détaillée des phénomènes grâce à une deuxième IA.
 - Le suivi et la visualisation des résultats à distance.
-
+-->
 ---
 
-# 🔮 10. Perspectives d'amélioration
+# 🔮 9. Perspectives d'amélioration
 
 Plusieurs évolutions peuvent être envisagées :
 
@@ -379,12 +379,8 @@ Plusieurs évolutions peuvent être envisagées :
 
 ## 👤 Auteur
 
-Projet de développement d'une station météorologique intelligente associant intelligence artificielle embarquée et intelligence artificielle distante.
+SILIADIN – AMARA
+
+**Module :** ETRS923 – IA et Objets Connectés
 
 **Technologies :** STM32 · FreeRTOS · Python · TensorFlow · C · ThingSpeak
-
----
-
-## 📄 Licence
-
-À définir selon les conditions de diffusion du projet.
