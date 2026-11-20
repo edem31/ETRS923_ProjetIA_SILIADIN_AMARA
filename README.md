@@ -329,44 +329,24 @@ L'architecture permet de combiner une intelligence artificielle embarquée, capa
 # 📁 8. Organisation du dépôt
 
 ```text
-Station_Meteo_IA/
-│
-├── IA_Python/
-│   ├── entrainement_pluie.py
-│   ├── modele_pluie.keras
-│   ├── modele_pluie_float32.tflite
-│   ├── modele_pluie_int8.tflite
-│   ├── parametres_pluie.json
-│   └── graphiques/
-│
-├── STM32/
-│   ├── Core/
-│   │   ├── Inc/
-│   │   │   ├── ia_pluie.h
-│   │   │   └── ia_pluie_poids.h
-│   │   └── Src/
-│   │       ├── ia_pluie.c
-│   │       └── app_freertos.c
-│   └── ...
-│
-├── ThingSpeak/
-│   └── Documentation et configuration
-│
+ETRS923_ProjetIA_SILIADIN_AMARA/
+├── Projet_ETRS923_YY/                 ← projet STM32CubeIDE (voir ci-dessous)
 ├── images/
-│   ├── architecture_globale.png
-│   ├── architecture_ia_stm32.png
-│   ├── architecture_freertos.png
-│   ├── architecture_ia_thingspeak.png
-│   ├── station_meteo.png
-│   ├── pipeline_entrainement.png
-│   ├── courbes_entrainement.png       # à ajouter
-│   ├── matrice_confusion.png          # à ajouter
-│   └── thingspeak_dashboard.png       # à ajouter
-│
-└── README.md
-```
+├── modeles IA/
+│   ├── modele ia cloud/               ← modèle Cloud (12 entrées → 6 classes)
+│   │   ├── model_ia_cloud.onnx        ← export ONNX
+│   │   ├── poids_modele_ia_cloud.txt  ← poids/biais au format MATLAB
+│   │   ├── script_modele_ia_cloud.m   ← script MATLAB Analysis exécuté sur ThingSpeak
+│   │   └── description_modele_ia_cloud.txt
+│   └── modele ia stm32/               ← modèle embarqué (3 entrées → pluie/sec)
+│       ├── model_ia_stm32.onnx
+│       ├── poids_modele_ia_stm32.txt
+│       └── description_modele_ia_stm32.txt
+├── script google colab/
+│   └── TP3.ipynb                      ← notebook d'entraînement (Meteostat → TensorFlow → ONNX / poids)
+└── README.md                          ← ce fichier
 
-*Cette arborescence est indicative et peut être adaptée à l'organisation réelle du projet.*
+```
 
 ---
 
