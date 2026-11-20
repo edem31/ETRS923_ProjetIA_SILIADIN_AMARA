@@ -322,6 +322,10 @@ Les graines aléatoires (`seed = 42`) sont fixées pour la reproductibilité.
 ROC-AUC : **0,83** — PR-AUC : **0,53** — F1 macro : **0,71** — accuracy : 0,83 (référence « toujours sec » : 0,835).
 > L'accuracy seule est trompeuse ici : ce sont l'AUC et le F1 de la classe « pluie » qui montrent que le modèle détecte réellement des signatures de pluie à partir de T, RH et P.
 
+<p align="center">
+  <img src="images/architecture_ia_stm32.png" width="95%" alt="Architecture du réseau de neurones embarqué" />
+</p>
+
 ### 9.2 Modèle IA Cloud – classification météo en 6 classes
 
 | | |
